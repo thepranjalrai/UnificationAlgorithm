@@ -1,5 +1,6 @@
 #include<iostream>
 #include<string>
+#include<stack>
 
 using namespace std;
 
@@ -8,90 +9,47 @@ class expr
     string name;
     bool predicate;   //1 for predicate, 0 for argument
 
-    expr* contains;
-    int contain_count;
+    stack<expr> args;
 
-    public:
-
-    void express (string tree)//(string _name, int _predicate, int word_count=0)
+public:
+    void express (string tree)
     {
         cout << "Defining " << tree << endl;
-        contain_count = 0;
 
-        cout << "Enter expression identifier : ";
-        cin >> name;
-        
-        cout<<"Is this a predicate? : ";
-        cin >> predicate;
+        cout << "Expression name : ";
+        cin >> this->name;
 
-        if(predicate)
+        cout << "Nested expressions? : ";
+        int arg_count;
+        cin >> arg_count;
+
+        for(int i=0; i<arg_count; i++)
         {
-            cout << "How many expressions does it contain? : ";
-            int word_count;
-            cin >> word_count;
+            string pseudo_name = tree + name + "_" + char(i + 48) + " >";
 
-            contains = new expr;
+            expr temp;
+            temp.express(pseudo_name);
 
-            for(int i=0; i<word_count; i++)
-            {
-                string pseudo_name = tree + name + char(i + 48) + "]>";
-                contains[contain_count++].express(pseudo_name);
-            }
+            args.push(temp);
         }
     }
 
     void bifurcate(int depth)
     {
-        cout << name << "_" << contain_count << endl;
+        cout << name << "_" << args.size() << endl;
         depth++;
 
-        for(int i=0; i<contain_count; i++)
+        //for(int i=0; i<args.size(); i++)
+        while(!args.empty())
         {
             for(int k=0; k<depth; k++)
                 cout << "\t";
             
-            contains[i].bifurcate(depth);
+            args.top().bifurcate(depth);
+            args.pop();
         }
     }
 };
-
-/*
-void verify(string expr)
-{
-    int bracket_state = 0;
-    
-    for(char c : expr)
-    {
-        if(c == '(')
-            bracket_state++;
-        else if(c == ')')
-            bracket_state--;
-    }
-}
-
-int main()
-{
-    string input;
-    string lhs, rhs;
-    
-    getline(cin, input);
-
-    bool seperated = false;
-    for(char c : input)
-    {
-        if(c == '=')
-        {
-            seperated = true;
-            continue;
-        }
-
-        if(!seperated)  lhs += c;
-        else            rhs += c;
-    }
-
-    cout << "_" << lhs << "_\n" << "_" << rhs << "_\n";
-}
-*/
 
 int main()
 {
