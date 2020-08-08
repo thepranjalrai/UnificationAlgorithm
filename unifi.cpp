@@ -85,13 +85,14 @@ string unify(expr lhs, expr rhs)
         {
             // a. then if Ψ1 occurs in Ψ2, then return FAILURE
             // b. Else return { (Ψ2/ Ψ1)}.
-            if(appearance(rhs).find(appearance(lhs)))
+            if(appearance(rhs).find(lhs.name) != std::string::npos)
             {
-                return "FAILURE";
+                cout << endl << appearance(rhs) << endl << lhs.name << endl;
+                return "FAILURE Ψ1 occurs in Ψ2";
             }
             else
             {
-                string rets = "{ (" + lhs.name + "/" + rhs.name + ")}";
+                string rets = "{ (" + appearance(lhs) + "/" + appearance(rhs) + ")}";
                 return rets;
             }
         }
@@ -100,26 +101,28 @@ string unify(expr lhs, expr rhs)
         {
             // a. If Ψ2 occurs in Ψ1 then return FAILURE,
             // b. Else return {( Ψ1/ Ψ2)}.
-            if(appearance(lhs).find(appearance(rhs)))
+            if(appearance(lhs).find(rhs.name) != std::string::npos)
             {
-                return "FAILURE";
+                cout << endl << appearance(lhs) << endl << rhs.name << endl;
+                cout << appearance(lhs).find(rhs.name) << endl;
+                return "FAILURE Ψ2 occurs in Ψ1";
             }
             else
             {
-                string rets = "{ (" + rhs.name + "/" + lhs.name + ")}";
+                string rets = "{ (" + appearance(rhs) + "/" + appearance(lhs) + ")}";
                 return rets;
             }
         }
-        else return "FAILURE";
+        else return "FAILURE all constants";
     }
 
     // Step.2: If the initial Predicate symbol in Ψ1 and Ψ2 are not same, then return FAILURE.
     if(lhs.name != rhs.name)
-        return "FAILURE";
+        return "FAILURE different predicates";
 
     // Step. 3: IF Ψ1 and Ψ2 have a different number of arguments, then return FAILURE.
     if(lhs.args.size() != rhs.args.size())
-        return "FAILURE";
+        return "FAILURE argument count mismatch";
 
     // Step. 4: Set Substitution set(SUBST) to NIL. 
     string substitutions = "";
@@ -133,14 +136,14 @@ string unify(expr lhs, expr rhs)
         lhs.args.pop();
         rhs.args.pop();
     //	b) If S = failure then returns Failure    
-        if(S == "FAILURE") return "FAILURE";
+        if(S.find("FAILURE")) return S;
     //	c) If S ≠ NIL then do,
         if(S != "NIL")
         {
             // a. Apply S to the remainder of both L1 and L2.
             {
-                cout << "Incomplete Code";
-                exit(0);
+                //cout << "Incomplete Code";
+                //exit(0);
             }
             // b. SUBST= APPEND(S, SUBST).
             {
