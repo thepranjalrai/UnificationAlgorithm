@@ -32,7 +32,7 @@ public:
             args.push(temp);
         }
     }
-
+/*
     void bifurcate(int depth)
     {
         cout << name << "_" << args.size() << endl;
@@ -47,26 +47,25 @@ public:
             args.pop();
         }
     }
+*/
 };
 
 string appearance(expr e, string rets = "")
 {
-    //string rets = "";
     rets += e.name;
-    //cout << e.name;
     if(!e.args.empty())
     {
         rets += "[ ";
-        //cout << "[ ";
         while(!e.args.empty())
         {
             rets += appearance(e.args.top());
             e.args.pop();
+
+            if(!e.args.empty()) rets += ", ";
         }
-        rets += " ] ";
-        //cout << " ] ";
+        rets += " ]";
     }
-    else rets += "  ";
+    //else rets += "  ";
 
     return rets;
 }
@@ -115,7 +114,11 @@ string unify(expr lhs, expr rhs)
                 return rets;
             }
         }
-        else return "FAILURE all constants";
+        else
+        {
+            cout << lhs.name << "|" << rhs.name << endl;
+            return "FAILURE all constants";
+        }
     }
 
     // Step.2: If the initial Predicate symbol in Ψ1 and Ψ2 are not same, then return FAILURE.
@@ -168,22 +171,17 @@ string unify(expr lhs, expr rhs)
 int main()
 {
     expr lhs;
-    lhs.express("L_");
-    cout << "\n\n\n";
+    lhs.express("LHS_");
+    cout << endl << appearance(lhs) << "\n\n\n";
 
     expr rhs;
-    rhs.express("R_");
-    cout << "\n\n\n";
+    rhs.express("RHS_");
+    cout << endl << appearance(rhs) << "\n\n\n";
 
     cout << appearance(lhs) << endl << appearance(rhs) << endl;
 
     cout << unify(lhs, rhs) << endl << endl <<endl;
-
-/*
-    lhs.bifurcate(0);
-    cout << "\n\n\n";
-
-    rhs.bifurcate(0);
-    cout << "\n\n\n";
-*/
 }
+
+//root[ third[ guava, banana[ babyBanana ] ], second, first[ apple ] ]
+//root[ first[ Where ], When, third[ Who, What ] ]
