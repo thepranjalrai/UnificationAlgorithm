@@ -110,7 +110,7 @@ string unify(expr lhs, expr rhs)
             }
             else
             {
-                string rets = "{ (" + appearance(rhs) + "/" + appearance(lhs) + ")}";
+                string rets = "{(" + appearance(rhs) + "/" + appearance(lhs) + ")}";
                 return rets;
             }
         }
@@ -146,7 +146,8 @@ string unify(expr lhs, expr rhs)
     //	b) If S = failure then returns Failure    
         if(S.find("FAILURE") != std::string::npos)
         {
-            cout << "\nFails" << S;
+            //cout << "\nFails" << S;
+            cout << S << endl;
             return S;
         }
     //	c) If S ≠ NIL then do,
@@ -159,7 +160,7 @@ string unify(expr lhs, expr rhs)
             }
             // b. SUBST= APPEND(S, SUBST).
             {
-                substitutions = substitutions + S + ", ";
+                substitutions = substitutions + S + "\n";
             }
         }
     }
@@ -170,6 +171,7 @@ string unify(expr lhs, expr rhs)
 
 int main()
 {
+    /*
     expr lhs;
     lhs.express("LHS_");
     cout << endl << appearance(lhs) << "\n\n\n";
@@ -181,7 +183,46 @@ int main()
     cout << appearance(lhs) << endl << appearance(rhs) << endl;
 
     cout << unify(lhs, rhs) << endl << endl <<endl;
-}
+    */
 
-//root[ third[ guava, banana[ babyBanana ] ], second, first[ apple ] ]
-//root[ first[ Where ], When, third[ Who, What ] ]
+   cout << "How many predicates would you define? : ";
+   int predicate_count;
+   cin >> predicate_count;
+
+   expr predicates[predicate_count];
+
+    cout << endl;
+    for(int i=0; i<predicate_count; i++)
+    {
+        cout << "\nEnter predicate " << i << " :-\n";
+
+        string pseudo_name = char(i+48) + "_";
+
+        predicates[i].express(pseudo_name);
+    }
+    cout << endl << endl;
+
+    cout << "Predicates are :-\n";
+    for(int i=0; i<predicate_count; i++)
+    {
+        cout << i << " " << appearance(predicates[i]) << endl;
+    }
+    cout << endl << endl;
+
+    for(int i=0; i<predicate_count; i++)
+    {
+        for(int j=0; j<predicate_count; j++)
+        {
+            if(i==j) continue;
+
+            cout << "....\nUnifying";
+            cout << "\n> " << appearance(predicates[i]);
+            cout << "\n> " << appearance(predicates[j]);
+            cout << endl;
+
+            substitutions = "";
+            cout << unify(predicates[i], predicates[j]);
+            cout << "\n....\n";
+        }
+    }
+}
