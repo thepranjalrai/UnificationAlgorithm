@@ -93,7 +93,7 @@ string unify(expr lhs, expr rhs)
             }
             else
             {
-                string rets = "{ (" + appearance(lhs) + "/" + appearance(rhs) + ")}";
+                string rets = "{" + appearance(lhs) + "/" + appearance(rhs) + "}";
                 return rets;
             }
         }
@@ -110,7 +110,7 @@ string unify(expr lhs, expr rhs)
             }
             else
             {
-                string rets = "{(" + appearance(rhs) + "/" + appearance(lhs) + ")}";
+                string rets = "{" + appearance(rhs) + "/" + appearance(lhs) + "}";
                 return rets;
             }
         }
@@ -196,7 +196,8 @@ int main()
     {
         cout << "\nEnter predicate " << i << " :-\n";
 
-        string pseudo_name = char(i+48) + "_";
+        string pseudo_name = "";
+        pseudo_name = pseudo_name + char(i+48) + "_";
 
         predicates[i].express(pseudo_name);
     }
@@ -222,7 +223,7 @@ int main()
 
             substitutions = "";
             cout << unify(predicates[i], predicates[j]);
-            cout << "\n....\n";
+            cout << "....\n\n";
         }
     }
 }
