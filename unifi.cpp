@@ -3,6 +3,7 @@
 #include<stack>
 
 using namespace std;
+string substitutions = "";
 
 class expr
 {
@@ -59,13 +60,13 @@ string appearance(expr e, string rets = "")
         //cout << "[ ";
         while(!e.args.empty())
         {
-            appearance(e.args.top(), rets);
+            rets += appearance(e.args.top());
             e.args.pop();
         }
         rets += " ] ";
         //cout << " ] ";
     }
-    else if(e.args.size() > 1) cout << "  ";
+    else rets += "  ";
 
     return rets;
 }
@@ -78,6 +79,7 @@ string unify(expr lhs, expr rhs)
         //a: If they are identical return nil.
         if(lhs.name == rhs.name)
         {
+            //cout << lhs.name << " " << rhs.name << endl;
             return "NIL";
         }
         //b: Else if Ψ1 is a variable,
@@ -125,7 +127,7 @@ string unify(expr lhs, expr rhs)
         return "FAILURE argument count mismatch";
 
     // Step. 4: Set Substitution set(SUBST) to NIL. 
-    string substitutions = "";
+    // Available as globas "string substitution = "";"
 
     // Step. 5: For i=1 to the number of elements in Ψ1. 
     while(!lhs.args.empty())
@@ -133,10 +135,17 @@ string unify(expr lhs, expr rhs)
     // 	a) Call Unify function with the ith element of Ψ1 and ith element of Ψ2,
     //     and put the result into S.
         string S = unify(lhs.args.top(), rhs.args.top());
+        //cout << endl << lhs.args.top().name << "\t" << rhs.args.top().name;
+        //cout << "\t" << S << endl;
         lhs.args.pop();
         rhs.args.pop();
+
     //	b) If S = failure then returns Failure    
-        if(S.find("FAILURE")) return S;
+        if(S.find("FAILURE") != std::string::npos)
+        {
+            cout << "\nFails" << S;
+            return S;
+        }
     //	c) If S ≠ NIL then do,
         if(S != "NIL")
         {
@@ -147,10 +156,11 @@ string unify(expr lhs, expr rhs)
             }
             // b. SUBST= APPEND(S, SUBST).
             {
-                substitutions = substitutions + ", " + S;
+                substitutions = substitutions + S + ", ";
             }
         }
     }
+
     //  Step.6: Return SUBST. 
     return substitutions;
 }
@@ -165,7 +175,10 @@ int main()
     rhs.express("R_");
     cout << "\n\n\n";
 
+    cout << appearance(lhs) << endl << appearance(rhs) << endl;
+
     cout << unify(lhs, rhs) << endl << endl <<endl;
+
 /*
     lhs.bifurcate(0);
     cout << "\n\n\n";
