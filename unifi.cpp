@@ -72,77 +72,83 @@ string appearance(expr e, string rets = "")
 
 string unify(expr lhs, expr rhs)
 {
-//Step 1 :  
-//a: If they are identical lreturn nil.
-    if(appearance(lhs) == appearance(rhs))
+    //Step. 1: If Ψ1 or Ψ2 is a variable or constant, then:
+    if(lhs.args.size() == 0 || rhs.args.size() == 0)
     {
-        return "NIL";
+        //a: If they are identical return nil.
+        if(lhs.name == rhs.name)
+        {
+            return "NIL";
+        }
+        //b: Else if Ψ1 is a variable,
+        else if(isupper(lhs.name[0]))
+        {
+            // a. then if Ψ1 occurs in Ψ2, then return FAILURE
+            // b. Else return { (Ψ2/ Ψ1)}.
+            if(appearance(rhs).find(appearance(lhs)))
+            {
+                return "FAILURE";
+            }
+            else
+            {
+                string rets = "{ (" + lhs.name + "/" + rhs.name + ")}";
+                return rets;
+            }
+        }
+        //c) Else if Ψ2 is a variable, 
+        else if(isupper(rhs.name[0]))
+        {
+            // a. If Ψ2 occurs in Ψ1 then return FAILURE,
+            // b. Else return {( Ψ1/ Ψ2)}.
+            if(appearance(lhs).find(appearance(rhs)))
+            {
+                return "FAILURE";
+            }
+            else
+            {
+                string rets = "{ (" + rhs.name + "/" + lhs.name + ")}";
+                return rets;
+            }
+        }
+        else return "FAILURE";
     }
-//b: Else if Ψ1is a variable, 
-//		a. then if Ψ1 occurs in Ψ2, then return FAILURE
-//		b. Else return { (Ψ2/ Ψ1)}.
-    if(appearance(rhs).find(appearance(lhs)))
-    {
-        return "FAILURE";
-    }
-    else
-    {
-        cout << endl << endl;
-        cout << "{ (";
-        cout << appearance(lhs);
-        cout << "/";
-        cout << appearance(rhs);
-        cout << ")}.";
-        cout << endl << endl;
-    }
-//c) Else if Ψ2 is a variable, 
-//		a. If Ψ2 occurs in Ψ1 then return FAILURE,
-//		b. Else return {( Ψ1/ Ψ2)}.
-    if(appearance(lhs).find(appearance(rhs)))
-    {
-        return "FALSE";
-    }
-    else
-    {
-        cout << endl << endl;
-        cout << "{ (";
-        cout << appearance(rhs);
-        cout << "/";
-        cout << appearance(lhs);
-        cout << ")}.";
-        cout << endl << endl;
-    }
-// Step.2: If the initial Predicate symbol in Ψ1 and Ψ2 are not same, then return FAILURE.
+
+    // Step.2: If the initial Predicate symbol in Ψ1 and Ψ2 are not same, then return FAILURE.
     if(lhs.name != rhs.name)
         return "FAILURE";
-// Step. 3: IF Ψ1 and Ψ2 have a different number of arguments, then return FAILURE.
+
+    // Step. 3: IF Ψ1 and Ψ2 have a different number of arguments, then return FAILURE.
     if(lhs.args.size() != rhs.args.size())
         return "FAILURE";
-// Step. 4: Set Substitution set(SUBST) to NIL. 
+
+    // Step. 4: Set Substitution set(SUBST) to NIL. 
     string substitutions = "";
-// Step. 5: For i=1 to the number of elements in Ψ1. 
+
+    // Step. 5: For i=1 to the number of elements in Ψ1. 
     while(!lhs.args.empty())
     {
-// 	a) Call Unify function with the ith element of Ψ1 and ith element of Ψ2,
-//     and put the result into S.
+    // 	a) Call Unify function with the ith element of Ψ1 and ith element of Ψ2,
+    //     and put the result into S.
         string S = unify(lhs.args.top(), rhs.args.top());
         lhs.args.pop();
         rhs.args.pop();
-//	b) If S = failure then returns Failure    
+    //	b) If S = failure then returns Failure    
         if(S == "FAILURE") return "FAILURE";
-//	c) If S ≠ NIL then do,
+    //	c) If S ≠ NIL then do,
         if(S != "NIL")
-//  	a. Apply S to the remainder of both L1 and L2.
         {
-            cout << "Incomplete Code";
-            exit(0);
-        }
-//		b. SUBST= APPEND(S, SUBST).
-        {
-            substitutions = substitutions + ", " + S;
+            // a. Apply S to the remainder of both L1 and L2.
+            {
+                cout << "Incomplete Code";
+                exit(0);
+            }
+            // b. SUBST= APPEND(S, SUBST).
+            {
+                substitutions = substitutions + ", " + S;
+            }
         }
     }
-//  Step.6: Return SUBST. 
+    //  Step.6: Return SUBST. 
     return substitutions;
 }
 
@@ -156,7 +162,7 @@ int main()
     rhs.express("R_");
     cout << "\n\n\n";
 
-    unify(lhs, rhs);
+    cout << unify(lhs, rhs) << endl << endl <<endl;
 /*
     lhs.bifurcate(0);
     cout << "\n\n\n";
